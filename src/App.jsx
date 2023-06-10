@@ -6,25 +6,46 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import StartGame from "./Pages/StartGame";
 import { Game } from "./Pages/Game";
 
+const CircleNumbers = [
+  { position: 1, value: 1, matched: false, clicked: false },
+  { position: 2, value: 2, matched: false, clicked: false },
+  { position: 3, value: 3, matched: false, clicked: false },
+  { position: 4, value: 4, matched: false, clicked: false },
+  { position: 5, value: 5, matched: false, clicked: false },
+  { position: 6, value: 6, matched: false, clicked: false },
+  { position: 7, value: 7, matched: false, clicked: false },
+  { position: 8, value: 8, matched: false, clicked: false },
+  { position: 9, value: 9, matched: false, clicked: false },
+  { position: 10, value: 10, matched: false, clicked: false },
+  { position: 11, value: 11, matched: false, clicked: false },
+  { position: 12, value: 12, matched: false, clicked: false },
+  { position: 13, value: 13, matched: false, clicked: false },
+  { position: 14, value: 14, matched: false, clicked: false },
+  { position: 15, value: 15, matched: false, clicked: false },
+  { position: 16, value: 16, matched: false, clicked: false },
+  { position: 17, value: 17, matched: false, clicked: false },
+  { position: 18, value: 18, matched: false, clicked: false },
+];
+
 const circleImages = [
-  { src: "/assets/icon-astronaut.svg", matched: false },
-  { src: "/assets/icon-cable-car.svg", matched: false },
-  { src: "/assets/icon-cake.svg", matched: false },
-  { src: "/assets/icon-dragon.svg", matched: false },
-  { src: "/assets/icon-hanukiah.svg", matched: false },
-  { src: "/assets/icon-heart.svg", matched: false },
-  { src: "/assets/icon-hippo.svg", matched: false },
-  { src: "/assets/icon-hourglass.svg", matched: false },
-  { src: "/assets/icon-khanda.svg", matched: false },
-  { src: "/assets/icon-landmark.svg", matched: false },
-  { src: "/assets/icon-octopus.svg", matched: false },
-  { src: "/assets/icon-planets.svg", matched: false },
-  { src: "/assets/icon-robot.svg", matched: false },
-  { src: "/assets/icon-snowflake.svg", matched: false },
-  { src: "/assets/icon-tornado.svg", matched: false },
-  { src: "/assets/icon-umbrella.svg", matched: false },
-  { src: "/assets/icon-hands.svg", matched: false },
-  { src: "/assets/icon-gas-pump.svg", matched: false },
+  { src: "/assets/icon-astronaut.svg", clicked: false, matched: false },
+  { src: "/assets/icon-cable-car.svg", clicked: false, matched: false },
+  { src: "/assets/icon-cake.svg", clicked: false, matched: false },
+  { src: "/assets/icon-dragon.svg", clicked: false, matched: false },
+  { src: "/assets/icon-hanukiah.svg", clicked: false, matched: false },
+  { src: "/assets/icon-heart.svg", clicked: false, matched: false },
+  { src: "/assets/icon-hippo.svg", clicked: false, matched: false },
+  { src: "/assets/icon-hourglass.svg", clicked: false, matched: false },
+  { src: "/assets/icon-khanda.svg", clicked: false, matched: false },
+  { src: "/assets/icon-landmark.svg", clicked: false, matched: false },
+  { src: "/assets/icon-octopus.svg", clicked: false, matched: false },
+  { src: "/assets/icon-planets.svg", clicked: false, matched: false },
+  { src: "/assets/icon-robot.svg", clicked: false, matched: false },
+  { src: "/assets/icon-snowflake.svg", clicked: false, matched: false },
+  { src: "/assets/icon-tornado.svg", clicked: false, matched: false },
+  { src: "/assets/icon-umbrella.svg", clicked: false, matched: false },
+  { src: "/assets/icon-hands.svg", clicked: false, matched: false },
+  { src: "/assets/icon-gas-pump.svg", clicked: false, matched: false },
 ];
 
 function App() {
@@ -36,14 +57,30 @@ function App() {
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [isFlipped, setIsFlipped] = useState(true);
-  const [guessed, setGuessed] = useState(true);
+
+  // console.log("selectedTheme:", selectedTheme);
+  // console.log("selectedGridSize:", selectedGridSize);
+  // console.log("selectedPlayers:", selectedPlayers);
+  console.log(choiceOne, choiceTwo);
 
   //shuffle Circles
+  // const shuffleCircles = () => {
+  //   const shuffledCircles = [...circleImages, ...circleImages]
+  //     .sort(() => Math.random() - 0.5)
+  //     // .slice(0, 8)
+  //     .map((circle) => ({ ...circle, id: Math.random() }));
+  //   setCircles(shuffledCircles);
+  //   setTurns(0);
+  // };
+
   const shuffleCircles = () => {
-    const shuffledCircles = [...circleImages, ...circleImages]
-      .sort(() => Math.random() - 0.5)
-      // .slice(0, 8)
-      .map((circle) => ({ ...circle, id: Math.random() }));
+    const shuffledCircles =
+      selectedTheme === "Numbers"
+        ? [...CircleNumbers, ...CircleNumbers].sort(() => Math.random() - 0.5)
+        : [...circleImages, ...circleImages]
+            .sort(() => Math.random() - 0.5)
+            .map((circle) => ({ ...circle, id: Math.random() }));
+
     setCircles(shuffledCircles);
     setTurns(0);
   };
@@ -51,34 +88,68 @@ function App() {
   // console.log(circles);
   // console.log(turns);
 
-  //handle a choice
+ 
+
   const handleChoice = (circle) => {
-    choiceOne ? setChoiceTwo(circle) : setChoiceOne(circle);
+    if (choiceOne && choiceTwo) {
+      return;
+    }
+
+    // if (choiceOne && choiceOne.id === circle.id) {
+    //   return;
+    // }
+
+    if (circle.clicked) {
+      return;
+    }
+
+    if (!choiceOne) {
+      setChoiceOne(circle);
+    } else {
+      setChoiceTwo(circle);
+    }
   };
 
-  //compare two circles
+
   useEffect(() => {
     if (choiceOne && choiceTwo) {
-      if (choiceOne.src === choiceTwo.src) {
-        setCircles((prevCircles) => {
-          return prevCircles.map((circle) => {
-            if (circle.src === choiceOne.src) {
+      const isMatched =
+        selectedTheme === "Numbers"
+          ? choiceOne.position === choiceTwo.position
+          : choiceOne.src === choiceTwo.src;
+
+      if (!isMatched) {
+        setTimeout(() => {
+          setCircles((prevCircles) =>
+            prevCircles.map((circle) => {
+              if (circle === choiceOne || circle === choiceTwo) {
+                return {
+                  ...circle,
+                  clicked: false,
+                };
+              }
+              return circle;
+            })
+          );
+          resetTurn();
+        }, 1000);
+      } else {
+        setCircles((prevCircles) =>
+          prevCircles.map((circle) => {
+            if (circle === choiceOne || circle === choiceTwo) {
               return {
                 ...circle,
+                clicked: true,
                 matched: true,
               };
-            } else {
-              return circle;
             }
             return circle;
-          });
-        });
+          })
+        );
         resetTurn();
-      } else {
-        setTimeout(() => resetTurn(), 1000);
       }
     }
-  }, [choiceOne, choiceTwo]);
+  }, [choiceOne, choiceTwo, selectedTheme]);
 
   console.log(circles);
 
@@ -115,6 +186,9 @@ function App() {
                 selectedTheme={selectedTheme}
                 setSelectedTheme={setSelectedTheme}
                 selectedPlayers={selectedPlayers}
+                setSelectedPlayers={setSelectedPlayers}
+                selectedGridSize={selectedGridSize}
+                setSelectedGridSize={setSelectedGridSize}
                 circles={circles}
                 turns={turns}
                 shuffleCircles={shuffleCircles}
@@ -123,8 +197,6 @@ function App() {
                 handleChoice={handleChoice}
                 isFlipped={isFlipped}
                 setIsFlipped={setIsFlipped}
-                guessed={guessed}
-                setGuessed={setGuessed}
               />
             }
           />

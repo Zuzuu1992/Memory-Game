@@ -1,6 +1,5 @@
 import { styled } from "@mui/system";
 import { Link, useNavigate } from "react-router-dom";
-// import { useHistory } from "react-router-dom";
 import {
   Box as MuiBox,
   Box,
@@ -38,7 +37,7 @@ function StartGame({
   return (
     <CustomBox>
       <Box>
-        <img src={Logo}></img>
+        <img src={Logo} />
       </Box>
 
       <Box

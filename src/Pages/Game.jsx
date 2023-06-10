@@ -1,56 +1,63 @@
 import { styled } from "@mui/system";
-import React, { useEffect } from "react";
-import { useState } from "react";
-import {
-  Box as MuiBox,
-  Box,
-  Stack,
-  cardActionAreaClasses,
-} from "@mui/material";
-import SingleCircle from "../components/SingleCircle";
+import React from "react";
+import { Box as MuiBox } from "@mui/material";
+import SingleCircleIcon from "../components/SingleCircleIcon";
+import SingleCircleNumber from "../components/SingleCircleNumber";
+
+const GridBox = styled(MuiBox)(`
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  column-gap: 9.12px;
+  row-gap: 9.12px;
+`);
 
 export const Game = ({
   selectedTheme,
-  setSelectedTheme,
-  selectedPlayers,
-  setSelectedPlayers,
   selectedGridSize,
-  setSelectedGridSize,
+  selectedPlayers,
   circles,
-  turns,
-  shuffleCircles,
   handleChoice,
-  isFlipped,
-  setIsFlipped,
   choiceOne,
   choiceTwo,
-  guessed,
-  setGuessed,
 }) => {
+  console.log(selectedTheme);
+  console.log(selectedGridSize);
+  console.log(selectedPlayers);
   return (
     <>
-      <GridBox>
-        {circles.map((circle) => (
-          <SingleCircle
-            key={circle.id}
-            circle={circle}
-            handleChoice={handleChoice}
-            isFlipped={
-              circle === choiceOne || circle === choiceTwo || circle.matched
-            }
-            guessed={guessed}
-          />
-        ))}
-      </GridBox>
+      {selectedTheme === "Icons" &&
+        selectedGridSize === "6x6" &&
+        selectedPlayers === "1" && (
+          <GridBox>
+            {circles.map((circle) => (
+              <SingleCircleIcon
+                key={circle.id}
+                circle={circle}
+                handleChoice={handleChoice}
+                isFlipped={
+                  circle === choiceOne || circle === choiceTwo || circle.clicked
+                }
+              />
+            ))}
+          </GridBox>
+        )}
+      {selectedTheme === "Numbers" &&
+        selectedGridSize === "6x6" &&
+        selectedPlayers === "1" && (
+          <GridBox>
+            {circles.map((circle, index) => (
+              <SingleCircleNumber
+                key={index}
+                circle={circle}
+                handleChoice={handleChoice}
+                isFlipped={
+                  circle === choiceOne || circle === choiceTwo || circle.clicked
+                }
+              />
+            ))}
+          </GridBox>
+        )}
     </>
   );
 };
-
-const GridBox = styled(MuiBox)(`
-  margin-top:40px;
-  display:grid;
-  grid-template-columns: repeat(6, 1fr);
-  column-gap:9.12px;
-  row-gap:9.12px;
-
-`);

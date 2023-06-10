@@ -1,14 +1,13 @@
 import { Box } from "@mui/material";
 import React from "react";
 
-function SingleCircle({ circle, handleChoice, isFlipped, guessed }) {
+function SingleCircleIcon({ circle, handleChoice, isFlipped }) {
   const handleCircleClick = () => {
     handleChoice(circle);
   };
 
   return (
     <>
-      {/* <Box sx={{ position: "relative" }}> */}
       <Box
         sx={{
           position: "relative",
@@ -37,14 +36,17 @@ function SingleCircle({ circle, handleChoice, isFlipped, guessed }) {
             height: "46.88px",
             transition: "all ease-in 0.2s",
             transitionDelay: "0.2s",
-            backgroundColor: isFlipped ? "#FDA214" : "#304859",
+            backgroundColor: circle.matched
+              ? "#BCCED9"
+              : isFlipped
+              ? "#FDA214"
+              : "#304859",
             borderRadius: "50%",
           }}
         ></Box>
       </Box>
-      {/* </Box> */}
     </>
   );
 }
 
-export default SingleCircle;
+export default SingleCircleIcon;
