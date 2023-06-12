@@ -57,36 +57,14 @@ function App() {
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [isFlipped, setIsFlipped] = useState(true);
+  const [disabled, setDisabled] = useState(false);
 
   // console.log("selectedTheme:", selectedTheme);
   // console.log("selectedGridSize:", selectedGridSize);
   // console.log("selectedPlayers:", selectedPlayers);
-  console.log(choiceOne, choiceTwo);
+  // console.log(choiceOne, choiceTwo);
 
-  //shuffle Circles
-  // const shuffleCircles = () => {
-  //   const shuffledCircles = [...circleImages, ...circleImages]
-  //     .sort(() => Math.random() - 0.5)
-  //     // .slice(0, 8)
-  //     .map((circle) => ({ ...circle, id: Math.random() }));
-  //   setCircles(shuffledCircles);
-  //   setTurns(0);
-  // };
-
-  // const shuffleCircles = () => {
-  //   const shuffledCircles =
-  //     selectedTheme === "Numbers"
-  //       ? [...CircleNumbers, ...CircleNumbers]
-  //           .sort(() => Math.random() - 0.5)
-  //           .map((circle) => ({ ...circle, id: Math.random() }))
-  //       : [...circleImages, ...circleImages]
-  //           .sort(() => Math.random() - 0.5)
-  //           .map((circle) => ({ ...circle, id: Math.random() }));
-
-  //   setCircles(shuffledCircles);
-  //   setTurns(0);
-  // };
-
+  //shuffle circles
   const shuffleCircles = () => {
     const shuffledCircles =
       selectedTheme === "Numbers" && selectedGridSize === "6x6"
@@ -98,21 +76,13 @@ function App() {
             .sort(() => Math.random() - 0.5)
             .map((circle) => ({ ...circle, id: Math.random() }))
         : selectedTheme === "Numbers" && selectedGridSize === "4x4"
-        ? [...CircleNumbers, ...CircleNumbers]
+        ? [...CircleNumbers.slice(0, 8), ...CircleNumbers.slice(0, 8)]
             .sort(() => Math.random() - 0.5)
-            .slice(0, 8)
-            .flatMap((circle) => [
-              { ...circle, id: Math.random() },
-              { ...circle, id: Math.random() },
-            ])
+            .map((circle) => ({ ...circle, id: Math.random() }))
         : selectedTheme === "Icons" && selectedGridSize === "4x4"
-        ? [...circleImages, ...circleImages]
+        ? [...circleImages.slice(0, 8), ...circleImages.slice(0, 8)]
             .sort(() => Math.random() - 0.5)
-            .slice(0, 8)
-            .flatMap((circle) => [
-              { ...circle, id: Math.random() },
-              { ...circle, id: Math.random() },
-            ])
+            .map((circle) => ({ ...circle, id: Math.random() }))
         : null;
 
     setCircles(shuffledCircles);
@@ -140,6 +110,8 @@ function App() {
 
   useEffect(() => {
     if (choiceOne && choiceTwo) {
+      setDisabled(true);
+      // console.log(disabled);
       const isMatched =
         selectedTheme === "Numbers"
           ? choiceOne.position === choiceTwo.position
@@ -178,14 +150,21 @@ function App() {
     }
   }, [choiceOne, choiceTwo, selectedTheme]);
 
-  console.log(circles);
+  // console.log(circles);
 
   // reset choices and increase turn
   const resetTurn = () => {
     setChoiceOne(null);
     setChoiceTwo(null);
     setTurns((prevTurns) => prevTurns + 1);
+    setDisabled(false);
   };
+
+  //start a new game automatically
+  useEffect(() => {
+    shuffleCircles();
+  }, []);
+
   return (
     <Router>
       <>
@@ -224,6 +203,7 @@ function App() {
                 handleChoice={handleChoice}
                 isFlipped={isFlipped}
                 setIsFlipped={setIsFlipped}
+                disabled={disabled}
               />
             }
           />

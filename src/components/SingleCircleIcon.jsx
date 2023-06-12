@@ -8,9 +8,12 @@ function SingleCircleIcon({
   selectedTheme,
   selectedGridSize,
   selectedPlayers,
+  disabled,
 }) {
   const handleCircleClick = () => {
-    handleChoice(circle);
+    if (!disabled) {
+      handleChoice(circle);
+    }
   };
 
   return (
