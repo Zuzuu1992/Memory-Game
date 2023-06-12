@@ -38,6 +38,9 @@ export const Game = ({
                 isFlipped={
                   circle === choiceOne || circle === choiceTwo || circle.clicked
                 }
+                selectedTheme={selectedTheme}
+                selectedPlayers={selectedPlayers}
+                selectedGridSize={selectedGridSize}
               />
             ))}
           </GridBox>
@@ -54,6 +57,55 @@ export const Game = ({
                 isFlipped={
                   circle === choiceOne || circle === choiceTwo || circle.clicked
                 }
+                selectedTheme={selectedTheme}
+                selectedPlayers={selectedPlayers}
+                selectedGridSize={selectedGridSize}
+              />
+            ))}
+          </GridBox>
+        )}
+      {selectedTheme === "Icons" &&
+        selectedGridSize === "4x4" &&
+        selectedPlayers === "1" && (
+          <GridBox
+            sx={{
+              gridTemplateColumns: "repeat(4, 1fr)",
+            }}
+          >
+            {circles.map((circle, index) => (
+              <SingleCircleIcon
+                key={index}
+                circle={circle}
+                handleChoice={handleChoice}
+                isFlipped={
+                  circle === choiceOne || circle === choiceTwo || circle.clicked
+                }
+                selectedTheme={selectedTheme}
+                selectedPlayers={selectedPlayers}
+                selectedGridSize={selectedGridSize}
+              />
+            ))}
+          </GridBox>
+        )}
+      {selectedTheme === "Numbers" &&
+        selectedGridSize === "4x4" &&
+        selectedPlayers === "1" && (
+          <GridBox
+            sx={{
+              gridTemplateColumns: "repeat(4, 1fr)",
+            }}
+          >
+            {circles.map((circle, index) => (
+              <SingleCircleNumber
+                key={index}
+                circle={circle}
+                handleChoice={handleChoice}
+                isFlipped={
+                  circle === choiceOne || circle === choiceTwo || circle.clicked
+                }
+                selectedTheme={selectedTheme}
+                selectedPlayers={selectedPlayers}
+                selectedGridSize={selectedGridSize}
               />
             ))}
           </GridBox>

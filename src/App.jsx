@@ -73,13 +73,47 @@ function App() {
   //   setTurns(0);
   // };
 
+  // const shuffleCircles = () => {
+  //   const shuffledCircles =
+  //     selectedTheme === "Numbers"
+  //       ? [...CircleNumbers, ...CircleNumbers]
+  //           .sort(() => Math.random() - 0.5)
+  //           .map((circle) => ({ ...circle, id: Math.random() }))
+  //       : [...circleImages, ...circleImages]
+  //           .sort(() => Math.random() - 0.5)
+  //           .map((circle) => ({ ...circle, id: Math.random() }));
+
+  //   setCircles(shuffledCircles);
+  //   setTurns(0);
+  // };
+
   const shuffleCircles = () => {
     const shuffledCircles =
-      selectedTheme === "Numbers"
-        ? [...CircleNumbers, ...CircleNumbers].sort(() => Math.random() - 0.5)
-        : [...circleImages, ...circleImages]
+      selectedTheme === "Numbers" && selectedGridSize === "6x6"
+        ? [...CircleNumbers, ...CircleNumbers]
             .sort(() => Math.random() - 0.5)
-            .map((circle) => ({ ...circle, id: Math.random() }));
+            .map((circle) => ({ ...circle, id: Math.random() }))
+        : selectedTheme === "Icons" && selectedGridSize === "6x6"
+        ? [...circleImages, ...circleImages]
+            .sort(() => Math.random() - 0.5)
+            .map((circle) => ({ ...circle, id: Math.random() }))
+        : selectedTheme === "Numbers" && selectedGridSize === "4x4"
+        ? [...CircleNumbers, ...CircleNumbers]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 8)
+            .flatMap((circle) => [
+              { ...circle, id: Math.random() },
+              { ...circle, id: Math.random() },
+            ])
+        : selectedTheme === "Icons" && selectedGridSize === "4x4"
+        ? [...circleImages, ...circleImages]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 8)
+            .flatMap((circle) => [
+              { ...circle, id: Math.random() },
+              { ...circle, id: Math.random() },
+            ])
+        : null;
 
     setCircles(shuffledCircles);
     setTurns(0);
@@ -88,16 +122,10 @@ function App() {
   // console.log(circles);
   // console.log(turns);
 
- 
-
   const handleChoice = (circle) => {
     if (choiceOne && choiceTwo) {
       return;
     }
-
-    // if (choiceOne && choiceOne.id === circle.id) {
-    //   return;
-    // }
 
     if (circle.clicked) {
       return;
@@ -109,7 +137,6 @@ function App() {
       setChoiceTwo(circle);
     }
   };
-
 
   useEffect(() => {
     if (choiceOne && choiceTwo) {

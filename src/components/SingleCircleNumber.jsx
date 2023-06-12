@@ -1,7 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 
-function SingleCircleNumber({ circle, handleChoice, isFlipped }) {
+function SingleCircleNumber({
+  circle,
+  handleChoice,
+  isFlipped,
+  selectedTheme,
+  selectedGridSize,
+  selectedPlayers,
+}) {
   const handleCircleClick = () => {
     handleChoice(circle);
   };
@@ -23,8 +30,8 @@ function SingleCircleNumber({ circle, handleChoice, isFlipped }) {
             display: "flex",
             alignItes: "center",
             justifyContent: "center",
-            width: "46.88px",
-            height: "46.88px",
+            width: selectedGridSize === "6x6" ? "46.88px" : "72.53px",
+            height: selectedGridSize === "6x6" ? "46.88px" : "72.53px",
             transition: "all ease-in 0.2s",
             transitionDelay: "0.2s",
             backgroundColor: circle.matched
@@ -40,8 +47,8 @@ function SingleCircleNumber({ circle, handleChoice, isFlipped }) {
               alignSelf: "center",
               color: "#FCFCFC",
               fontWeight: "700",
-              fontSize: "24px",
-              lineHeight: "30px",
+              fontSize: selectedGridSize === "6x6" ? "24px" : "40px",
+              lineHeight: selectedGridSize === "6x6" ? "30px" : "50px",
               transform: !isFlipped ? "rotateY(90deg)" : "rotateY(0deg)",
               transition: "all ease-in 0.2s",
               transitionDelay: "0.2s",
