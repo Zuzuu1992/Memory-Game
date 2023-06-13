@@ -1,5 +1,6 @@
 import { styled } from "@mui/system";
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Box,
   Box as MuiBox,
@@ -24,6 +25,7 @@ export const Game = ({
   choiceOne,
   choiceTwo,
   disabled,
+  shuffleCircles,
 }) => {
   // console.log(selectedTheme);
   // console.log(selectedGridSize);
@@ -54,6 +56,27 @@ export const Game = ({
     };
   }, []);
 
+  const [time, setTime] = useState(0);
+  const [stop, setStop] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState(false);
+
+  const handleRestart = () => {
+    setButtonClicked(true);
+    shuffleCircles();
+    setTime(0);
+    setShow(false);
+  };
+
+  const handleNewGame = () => {
+    setButtonClicked(true);
+    window.location.href = "/";
+  };
+
+  const handleResumeGame = () => {
+    setButtonClicked(true);
+    setShow(false);
+  };
+
   return (
     <>
       <WrapperBox show={show ? "false" : undefined}>
@@ -69,9 +92,19 @@ export const Game = ({
             {show && (
               <div ref={menuRef}>
                 <MenuBox>
-                  <ResetButton>Restart</ResetButton>
-                  <ResetButton>New Game</ResetButton>
-                  <ResetButton>Resume Game</ResetButton>
+                  <ResetButton
+                    onClick={handleRestart}
+                    sx={{
+                      backgroundColor: buttonClicked ? "#FDA214" : "#DFE7EC",
+                      color: buttonClicked ? "#FCFCFC" : "#304859",
+                    }}
+                  >
+                    Restart
+                  </ResetButton>
+                  <ResetButton onClick={handleNewGame}>New Game</ResetButton>
+                  <ResetButton onClick={handleResumeGame}>
+                    Resume Game
+                  </ResetButton>
                 </MenuBox>
               </div>
             )}
@@ -176,7 +209,12 @@ export const Game = ({
         <Footer>
           <SideBox>
             <BoxTM>Time</BoxTM>
-            <Timer>8</Timer>
+            <Timer
+              time={time}
+              setTime={setTime}
+              stop={stop}
+              setStop={setStop}
+            ></Timer>
           </SideBox>
           <SideBox>
             <BoxTM>Moves</BoxTM>
@@ -198,7 +236,7 @@ const WrapperBox = styled(MuiBox)(
   padding-left: 24px;
   padding-right: 24px;
   position: relative;
-  height:100vh;
+  min-height:100vh;
 
   &::before {
     content: "";
@@ -260,7 +298,12 @@ const ResetButton = styled(MuiButton)(`
   width:100%;
   padding-top:12px;
   padding-bottom:14px;
+  transition:all 0.3s;
  
+  &:hover {
+    background-color: #FDA214;
+    color:#FCFCFC;
+  }
 `);
 
 const GridBox = styled(MuiBox)(`

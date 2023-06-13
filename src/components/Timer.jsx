@@ -3,37 +3,21 @@ import { styled } from "@mui/system";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-const Timer = () => {
-  const [time, setTime] = useState(0);
-  const [isActive, setIsActive] = useState(true);
-
+const Timer = ({ time, setTime, stop, setStop }) => {
   useEffect(() => {
-    let interval = null;
+    const interval = setInterval(() => {
+      setTime((prevTime) => {
+        if (stop) {
+          clearInterval(interval);
+        }
+        return prevTime + 1;
+      });
+    }, 1000);
 
-    if (isActive) {
-      interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
-      }, 1000);
-    } else {
+    return () => {
       clearInterval(interval);
-    }
-
-    return () => clearInterval(interval);
-  }, [isActive]);
-
-  const handleGameOver = () => {
-    setIsActive(false);
-  };
-
-  useEffect(() => {
-    // You can start the timer when the game is loaded
-    // by setting isActive to true here
-    setIsActive(true);
-
-    // Remember to stop the timer when the game is over
-    // by calling handleGameOver()
-    return () => handleGameOver();
-  }, []);
+    };
+  }, [stop]);
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60)
@@ -43,11 +27,7 @@ const Timer = () => {
     return `${minutes}:${seconds}`;
   };
 
-  return (
-    <Box>
-      <TimerTypo> {formatTime(time)}</TimerTypo>
-    </Box>
-  );
+  return <TimerTypo>{formatTime(time)}</TimerTypo>;
 };
 
 export default Timer;

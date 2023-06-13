@@ -85,6 +85,8 @@ function App() {
             .map((circle) => ({ ...circle, id: Math.random() }))
         : null;
 
+    setChoiceOne(null);
+    setChoiceTwo(null);
     setCircles(shuffledCircles);
     setTurns(0);
   };
