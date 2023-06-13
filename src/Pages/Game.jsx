@@ -8,6 +8,7 @@ import {
   Button as MuiButton,
   Stack,
   Typography as MuiTypography,
+  Typography,
 } from "@mui/material";
 import SingleCircleIcon from "../components/SingleCircleIcon";
 import SingleCircleNumber from "../components/SingleCircleNumber";
@@ -26,10 +27,16 @@ export const Game = ({
   choiceTwo,
   disabled,
   shuffleCircles,
+  stop,
+  setStop,
+  gameOver,
+  setGameOver,
 }) => {
   // console.log(selectedTheme);
   // console.log(selectedGridSize);
   // console.log(selectedPlayers);
+
+  // console.log(gameOver);
 
   const [show, setShow] = useState(false);
   const menuRef = useRef(null);
@@ -57,19 +64,28 @@ export const Game = ({
   }, []);
 
   const [time, setTime] = useState(0);
-  const [stop, setStop] = useState(false);
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (timeInSeconds % 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  };
   const [buttonClicked, setButtonClicked] = useState(false);
 
   const handleRestart = () => {
     setButtonClicked(true);
     shuffleCircles();
     setTime(0);
+    setStop(false);
     setShow(false);
+    setGameOver(false);
   };
 
   const handleNewGame = () => {
     setButtonClicked(true);
     window.location.href = "/";
+    setGameOver(false);
   };
 
   const handleResumeGame = () => {
@@ -95,8 +111,8 @@ export const Game = ({
                   <ResetButton
                     onClick={handleRestart}
                     sx={{
-                      backgroundColor: buttonClicked ? "#FDA214" : "#DFE7EC",
-                      color: buttonClicked ? "#FCFCFC" : "#304859",
+                      backgroundColor: "#FDA214",
+                      color: "#FCFCFC",
                     }}
                   >
                     Restart
@@ -108,118 +124,202 @@ export const Game = ({
                 </MenuBox>
               </div>
             )}
+            {gameOver && (
+              <div ref={menuRef} style={{ position: "relative" }}>
+                <OverBox>
+                  <H1>You did it!</H1>
+                  <H2>Game over! Here's how you got on...</H2>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      rowGap: "8px",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <Results>
+                      <Title>Time Elapsed</Title>
+                      <Total>{formatTime(time)}</Total>
+                    </Results>
+                    <Results>
+                      <Title>Moves Taken</Title>
+                      <Total>{turns} Moves</Total>
+                    </Results>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      rowGap: "16px",
+                    }}
+                  >
+                    <ResetButton
+                      onClick={handleRestart}
+                      sx={{
+                        backgroundColor: buttonClicked ? "#FDA214" : "#DFE7EC",
+                        color: buttonClicked ? "#FCFCFC" : "#304859",
+                      }}
+                    >
+                      Restart
+                    </ResetButton>
+                    <ResetButton onClick={handleNewGame}>
+                      Setup New Game
+                    </ResetButton>
+                  </Box>
+                </OverBox>
+              </div>
+            )}
           </Box>
         </Header>
-        {selectedTheme === "Icons" &&
-          selectedGridSize === "6x6" &&
-          selectedPlayers === "1" && (
-            <GridBox>
-              {circles.map((circle) => (
-                <SingleCircleIcon
-                  key={circle.id}
-                  circle={circle}
-                  handleChoice={handleChoice}
-                  isFlipped={
-                    circle === choiceOne ||
-                    circle === choiceTwo ||
-                    circle.clicked
-                  }
-                  selectedTheme={selectedTheme}
-                  selectedPlayers={selectedPlayers}
-                  selectedGridSize={selectedGridSize}
-                  disabled={disabled}
-                />
-              ))}
-            </GridBox>
-          )}
-        {selectedTheme === "Numbers" &&
-          selectedGridSize === "6x6" &&
-          selectedPlayers === "1" && (
-            <GridBox>
-              {circles.map((circle, index) => (
-                <SingleCircleNumber
-                  key={index}
-                  circle={circle}
-                  handleChoice={handleChoice}
-                  isFlipped={
-                    circle === choiceOne ||
-                    circle === choiceTwo ||
-                    circle.clicked
-                  }
-                  selectedTheme={selectedTheme}
-                  selectedPlayers={selectedPlayers}
-                  selectedGridSize={selectedGridSize}
-                  disabled={disabled}
-                />
-              ))}
-            </GridBox>
-          )}
-        {selectedTheme === "Icons" &&
-          selectedGridSize === "4x4" &&
-          selectedPlayers === "1" && (
-            <GridBox
-              sx={{
-                gridTemplateColumns: "repeat(4, 1fr)",
-              }}
-            >
-              {circles.map((circle, index) => (
-                <SingleCircleIcon
-                  key={index}
-                  circle={circle}
-                  handleChoice={handleChoice}
-                  isFlipped={
-                    circle === choiceOne ||
-                    circle === choiceTwo ||
-                    circle.clicked
-                  }
-                  selectedTheme={selectedTheme}
-                  selectedPlayers={selectedPlayers}
-                  selectedGridSize={selectedGridSize}
-                  disabled={disabled}
-                />
-              ))}
-            </GridBox>
-          )}
-        {selectedTheme === "Numbers" &&
-          selectedGridSize === "4x4" &&
-          selectedPlayers === "1" && (
-            <GridBox
-              sx={{
-                gridTemplateColumns: "repeat(4, 1fr)",
-              }}
-            >
-              {circles.map((circle, index) => (
-                <SingleCircleNumber
-                  key={index}
-                  circle={circle}
-                  handleChoice={handleChoice}
-                  isFlipped={
-                    circle === choiceOne ||
-                    circle === choiceTwo ||
-                    circle.clicked
-                  }
-                  selectedTheme={selectedTheme}
-                  selectedPlayers={selectedPlayers}
-                  selectedGridSize={selectedGridSize}
-                  disabled={disabled}
-                />
-              ))}
-            </GridBox>
-          )}
+        {selectedTheme === "Icons" && selectedGridSize === "6x6" && (
+          <GridBox>
+            {circles.map((circle) => (
+              <SingleCircleIcon
+                key={circle.id}
+                circle={circle}
+                handleChoice={handleChoice}
+                isFlipped={
+                  circle === choiceOne || circle === choiceTwo || circle.clicked
+                }
+                selectedTheme={selectedTheme}
+                selectedPlayers={selectedPlayers}
+                selectedGridSize={selectedGridSize}
+                disabled={disabled}
+              />
+            ))}
+          </GridBox>
+        )}
+        {selectedTheme === "Numbers" && selectedGridSize === "6x6" && (
+          <GridBox>
+            {circles.map((circle, index) => (
+              <SingleCircleNumber
+                key={index}
+                circle={circle}
+                handleChoice={handleChoice}
+                isFlipped={
+                  circle === choiceOne || circle === choiceTwo || circle.clicked
+                }
+                selectedTheme={selectedTheme}
+                selectedPlayers={selectedPlayers}
+                selectedGridSize={selectedGridSize}
+                disabled={disabled}
+              />
+            ))}
+          </GridBox>
+        )}
+        {selectedTheme === "Icons" && selectedGridSize === "4x4" && (
+          <GridBox
+            sx={{
+              gridTemplateColumns: "repeat(4, 1fr)",
+            }}
+          >
+            {circles.map((circle, index) => (
+              <SingleCircleIcon
+                key={index}
+                circle={circle}
+                handleChoice={handleChoice}
+                isFlipped={
+                  circle === choiceOne || circle === choiceTwo || circle.clicked
+                }
+                selectedTheme={selectedTheme}
+                selectedPlayers={selectedPlayers}
+                selectedGridSize={selectedGridSize}
+                disabled={disabled}
+              />
+            ))}
+          </GridBox>
+        )}
+        {selectedTheme === "Numbers" && selectedGridSize === "4x4" && (
+          <GridBox
+            sx={{
+              gridTemplateColumns: "repeat(4, 1fr)",
+            }}
+          >
+            {circles.map((circle, index) => (
+              <SingleCircleNumber
+                key={index}
+                circle={circle}
+                handleChoice={handleChoice}
+                isFlipped={
+                  circle === choiceOne || circle === choiceTwo || circle.clicked
+                }
+                selectedTheme={selectedTheme}
+                selectedPlayers={selectedPlayers}
+                selectedGridSize={selectedGridSize}
+                disabled={disabled}
+              />
+            ))}
+          </GridBox>
+        )}
         <Footer>
-          <SideBox>
-            <BoxTM>Time</BoxTM>
-            <Timer
-              time={time}
-              setTime={setTime}
-              stop={stop}
-              setStop={setStop}
-            ></Timer>
-          </SideBox>
-          <SideBox>
-            <BoxTM>Moves</BoxTM>
-            <BoxValue>{turns}</BoxValue>
-          </SideBox>
+          {selectedPlayers === "1" && (
+            <>
+              <SideBox>
+                <BoxTM>Time</BoxTM>
+                <Timer
+                  formatTime={formatTime}
+                  time={time}
+                  setTime={setTime}
+                  stop={stop}
+                  setStop={setStop}
+                ></Timer>
+              </SideBox>
+              <SideBox>
+                <BoxTM>Moves</BoxTM>
+                <BoxValue>{turns}</BoxValue>
+              </SideBox>
+            </>
+          )}
+          {selectedPlayers === "2" && (
+            <>
+              <SideBox>
+                <BoxTM>Player 1</BoxTM>
+                <BoxValue>0</BoxValue>
+              </SideBox>
+              <SideBox>
+                <BoxTM>Player 2</BoxTM>
+                <BoxValue>0</BoxValue>
+              </SideBox>
+            </>
+          )}
+          {selectedPlayers === "3" && (
+            <>
+              <SideBox>
+                <BoxTM>P1</BoxTM>
+                <BoxValue>0</BoxValue>
+              </SideBox>
+              <SideBox>
+                <BoxTM>P2</BoxTM>
+                <BoxValue>0</BoxValue>
+              </SideBox>
+              <SideBox>
+                <BoxTM>P3</BoxTM>
+                <BoxValue>0</BoxValue>
+              </SideBox>
+            </>
+          )}
+          {selectedPlayers === "4" && (
+            <>
+              <SideBox>
+                <BoxTM>P1</BoxTM>
+                <BoxValue>0</BoxValue>
+              </SideBox>
+              <SideBox>
+                <BoxTM>P2</BoxTM>
+                <BoxValue>0</BoxValue>
+              </SideBox>
+              <SideBox>
+                <BoxTM>P3</BoxTM>
+                <BoxValue>0</BoxValue>
+              </SideBox>
+              <SideBox>
+                <BoxTM>P4</BoxTM>
+                <BoxValue>0</BoxValue>
+              </SideBox>
+            </>
+          )}
         </Footer>
       </WrapperBox>
     </>
@@ -259,6 +359,7 @@ padding-top:10px;
 padding-bottom:10px;
 padding-left:18px;
 padding-right:18px;
+font-family: 'Atkinson Hyperlegible';
 font-weight: 700;
 font-size: 16px;
 line-height: 20px;
@@ -287,9 +388,26 @@ const MenuBox = styled(MuiBox)(`
   z-index:2;
 `);
 
+const OverBox = styled(MuiBox)(`
+  position:absolute;
+  top:80px;
+  right:0;
+  width:327px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  row-gap:16px;
+  background-color:#F2F2F2;
+  padding:24px;
+  border-radius:10px;
+  z-index:2;
+`);
+
 const ResetButton = styled(MuiButton)(`
   background-color:#DFE7EC;
   border-radius:26px;
+  font-family: 'Atkinson Hyperlegible';
   font-weight: 700;
   font-size: 18px;
   line-height: 22px;
@@ -343,6 +461,7 @@ const SideBox = styled(MuiBox)(`
 `);
 
 const BoxTM = styled(MuiTypography)(`
+font-family: 'Atkinson Hyperlegible';
  font-weight: 700;
  font-size: 15px;
  line-height: 19px;
@@ -350,10 +469,61 @@ const BoxTM = styled(MuiTypography)(`
 `);
 
 const BoxValue = styled(MuiBox)(`
+ font-family: 'Atkinson Hyperlegible';
  font-style: normal;
  font-weight: 700;
  font-size: 24px;
  line-height: 30px;
  text-align: center;
  color: #304859;
+`);
+
+const H1 = styled(MuiTypography)(`
+ font-family: 'Atkinson Hyperlegible';
+ font-weight: 700;
+ font-size: 24px;
+ line-height: 30px;
+ text-align: center;
+ color: #152938;
+`);
+
+const H2 = styled(MuiTypography)(`
+ font-family: 'Atkinson Hyperlegible';
+ font-weight: 700;
+ font-size: 14px;
+ line-height: 17px;
+ text-align: center;
+ color: #7191A5;
+ margin-top:-11px;
+ margin-bottom:12px;
+`);
+
+const Results = styled(MuiBox)(`
+ background-color:#DFE7EC;
+ border-radius:5px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:16px;
+ width:100%;
+`);
+
+const Title = styled(MuiTypography)(`
+ font-family: 'Atkinson Hyperlegible';
+ font-style: normal;
+ font-weight: 700;
+ font-size: 13px;
+ line-height: 16px;
+ color: #7191A5;
+
+`);
+
+const Total = styled(MuiTypography)(`
+font-family: 'Atkinson Hyperlegible';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 25px;
+color: #304859;
+
 `);

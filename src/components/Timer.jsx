@@ -3,7 +3,7 @@ import { styled } from "@mui/system";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-const Timer = ({ time, setTime, stop, setStop }) => {
+const Timer = ({ time, setTime, stop, setStop, formatTime }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prevTime) => {
@@ -18,14 +18,6 @@ const Timer = ({ time, setTime, stop, setStop }) => {
       clearInterval(interval);
     };
   }, [stop]);
-
-  const formatTime = (timeInSeconds) => {
-    const minutes = Math.floor(timeInSeconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const seconds = (timeInSeconds % 60).toString().padStart(2, "0");
-    return `${minutes}:${seconds}`;
-  };
 
   return <TimerTypo>{formatTime(time)}</TimerTypo>;
 };

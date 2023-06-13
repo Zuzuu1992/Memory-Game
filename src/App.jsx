@@ -58,6 +58,8 @@ function App() {
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [isFlipped, setIsFlipped] = useState(true);
   const [disabled, setDisabled] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [stop, setStop] = useState(false);
 
   // console.log("selectedTheme:", selectedTheme);
   // console.log("selectedGridSize:", selectedGridSize);
@@ -111,9 +113,25 @@ function App() {
   };
 
   useEffect(() => {
+    const allMatched = circles.every((circle) => circle.matched);
+    if (allMatched && circles.length > 0) {
+      setGameOver(true);
+      setStop(true);
+      console.log(gameOver);
+    }
+  }, [circles]);
+
+  useEffect(() => {
     if (choiceOne && choiceTwo) {
       setDisabled(true);
       // console.log(disabled);
+
+      // const allMatched = circles.every((circle) => circle.matched);
+      // if (allMatched && circles.length > 0) {
+      //   setGameOver(true);
+      //   console.log(gameOver);
+      // }
+
       const isMatched =
         selectedTheme === "Numbers"
           ? choiceOne.position === choiceTwo.position
@@ -150,7 +168,7 @@ function App() {
         resetTurn();
       }
     }
-  }, [choiceOne, choiceTwo, selectedTheme]);
+  }, [choiceOne, choiceTwo, selectedTheme, gameOver]);
 
   // console.log(circles);
 
@@ -206,6 +224,10 @@ function App() {
                 isFlipped={isFlipped}
                 setIsFlipped={setIsFlipped}
                 disabled={disabled}
+                gameOver={gameOver}
+                setGameOver={setGameOver}
+                stop={stop}
+                setStop={setStop}
               />
             }
           />
