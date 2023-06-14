@@ -34,6 +34,7 @@ export const Game = ({
   currentPlayerIndex,
   setCurrentPlayerIndex,
   players,
+  setPlayers,
   currentPlayer,
 }) => {
   // console.log(selectedTheme);
@@ -41,7 +42,7 @@ export const Game = ({
   // console.log(selectedPlayers);
 
   // console.log(gameOver);
-  console.log(players);
+  // console.log(players);
   // console.log(currentPlayer);
   // console.log(currentPlayerIndex);
 
@@ -87,6 +88,11 @@ export const Game = ({
     setStop(false);
     setShow(false);
     setGameOver(false);
+    const updatedPlayers = players.map((player) => {
+      return { ...player, score: 0 };
+    });
+    setPlayers(updatedPlayers);
+    setCurrentPlayerIndex(0);
   };
 
   const handleNewGame = () => {
@@ -100,9 +106,27 @@ export const Game = ({
     setShow(false);
   };
 
+  const getWinners = () => {
+    const winners = [];
+    let maxScore = -Infinity;
+
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i];
+      if (player.score > maxScore) {
+        maxScore = player.score;
+        winners.length = 0;
+        winners.push(i);
+      } else if (player.score === maxScore) {
+        winners.push(i);
+      }
+    }
+
+    return winners;
+  };
+
   return (
     <>
-      <WrapperBox show={show ? "false" : undefined}>
+      <WrapperBox className={show || gameOver ? "show" : ""}>
         <Header>
           <img src={Logo2} style={{ width: "92px" }} />
           <Box sx={{ position: "relative" }}>
@@ -134,26 +158,85 @@ export const Game = ({
             {gameOver && (
               <div ref={menuRef} style={{ position: "relative" }}>
                 <OverBox>
-                  <H1>You did it!</H1>
-                  <H2>Game over! Here's how you got on...</H2>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      rowGap: "8px",
-                      marginBottom: "16px",
-                    }}
-                  >
-                    <Results>
-                      <Title>Time Elapsed</Title>
-                      <Total>{formatTime(time)}</Total>
-                    </Results>
-                    <Results>
-                      <Title>Moves Taken</Title>
-                      <Total>{turns} Moves</Total>
-                    </Results>
-                  </Box>
+                  {selectedPlayers === "1" ? (
+                    <>
+                      <H1>You did it!</H1>
+                      <H2>Game over! Here's how you got on...</H2>
+
+                      <Box
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          rowGap: "8px",
+                          marginBottom: "16px",
+                        }}
+                      >
+                        <Results>
+                          <Title>Time Elapsed</Title>
+                          <Total>{formatTime(time)}</Total>
+                        </Results>
+                        <Results>
+                          <Title>see</Title>
+                          <Total>{turns} Moves</Total>
+                        </Results>
+                      </Box>
+                    </>
+                  ) : (
+                    <>
+                      {getWinners().length > 1 ? (
+                        <H1>It's a tie!</H1>
+                      ) : (
+                        <H1>Player {getWinners()[0] + 1} Wins!</H1>
+                      )}
+                      <H2>Game over! Here are the results...</H2>
+
+                      <Box
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          rowGap: "8px",
+                          marginBottom: "16px",
+                        }}
+                      >
+                        {players.map((player, index) => (
+                          <Results
+                            key={index}
+                            sx={{
+                              backgroundColor: getWinners().includes(index)
+                                ? "#152938"
+                                : "#DFE7EC",
+                              order: getWinners().includes(index) ? -1 : 0,
+                            }}
+                          >
+                            <Title
+                              sx={{
+                                color: getWinners().includes(index)
+                                  ? "#FCFCFC"
+                                  : "#7191A5",
+                              }}
+                            >
+                              {getWinners().includes(index) ? (
+                                <span>Player {index + 1} (Winner)</span>
+                              ) : (
+                                <span>Player {index + 1}</span>
+                              )}
+                            </Title>
+                            <Total
+                              sx={{
+                                color: getWinners().includes(index)
+                                  ? "#FCFCFC"
+                                  : "#304859",
+                              }}
+                            >
+                              {player.score} Pairs
+                            </Total>
+                          </Results>
+                        ))}
+                      </Box>
+                    </>
+                  )}
                   <Box
                     sx={{
                       width: "100%",
@@ -421,7 +504,7 @@ export const Game = ({
 };
 
 const WrapperBox = styled(MuiBox)(
-  ({ show }) => `
+  ({ show, gameOver }) => `
   display: flex;
   flex-direction: column;
   row-gap: 85px;
@@ -430,7 +513,7 @@ const WrapperBox = styled(MuiBox)(
   padding-left: 24px;
   padding-right: 24px;
   position: relative;
-  min-height:100vh;
+  min-height: 100vh;
 
   &::before {
     content: "";
@@ -441,8 +524,13 @@ const WrapperBox = styled(MuiBox)(
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
     z-index: 1;
-    display: ${show ? "block" : "none"};
-    pointer-events: ${show ? "auto" : "none"};
+    display: none;
+    pointer-events: none;
+  }
+
+  &.show::before {
+    display: block;
+    pointer-events: auto;
   }
 `
 );

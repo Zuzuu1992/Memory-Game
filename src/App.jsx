@@ -254,6 +254,7 @@ function App() {
                 currentPlayerIndex={currentPlayerIndex}
                 setCurrentPlayerIndex={setCurrentPlayerIndex}
                 players={players}
+                setPlayers={setPlayers}
                 currentPlayer={currentPlayer}
               />
             }
