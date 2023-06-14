@@ -31,12 +31,19 @@ export const Game = ({
   setStop,
   gameOver,
   setGameOver,
+  currentPlayerIndex,
+  setCurrentPlayerIndex,
+  players,
+  currentPlayer,
 }) => {
   // console.log(selectedTheme);
   // console.log(selectedGridSize);
   // console.log(selectedPlayers);
 
   // console.log(gameOver);
+  console.log(players);
+  // console.log(currentPlayer);
+  // console.log(currentPlayerIndex);
 
   const [show, setShow] = useState(false);
   const menuRef = useRef(null);
@@ -274,50 +281,137 @@ export const Game = ({
           )}
           {selectedPlayers === "2" && (
             <>
-              <SideBox>
-                <BoxTM>Player 1</BoxTM>
-                <BoxValue>0</BoxValue>
-              </SideBox>
-              <SideBox>
-                <BoxTM>Player 2</BoxTM>
-                <BoxValue>0</BoxValue>
-              </SideBox>
+              {players.map((player, index) => (
+                <SideBox
+                  key={index}
+                  sx={{
+                    position: "relative",
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: -13,
+                      left: 65,
+                      width: 0,
+                      height: 0,
+                      borderLeft: "10px solid transparent",
+                      borderRight: "10px solid transparent",
+                      borderBottom: `15px solid ${
+                        index === currentPlayerIndex ? "#FDA214" : "#DFE7EC"
+                      }`,
+                    },
+                    transition: "all 0.3s",
+                    backgroundColor:
+                      index === currentPlayerIndex ? "#FDA214" : "#DFE7EC",
+                  }}
+                >
+                  <BoxTM
+                    sx={{
+                      color:
+                        index === currentPlayerIndex ? "#FCFCFC" : "#7191A5",
+                    }}
+                  >
+                    P{index + 1}
+                  </BoxTM>
+                  <BoxValue
+                    sx={{
+                      color:
+                        index === currentPlayerIndex ? "#FCFCFC" : "#304859",
+                    }}
+                  >
+                    {player.score}
+                  </BoxValue>
+                </SideBox>
+              ))}
             </>
           )}
           {selectedPlayers === "3" && (
             <>
-              <SideBox>
-                <BoxTM>P1</BoxTM>
-                <BoxValue>0</BoxValue>
-              </SideBox>
-              <SideBox>
-                <BoxTM>P2</BoxTM>
-                <BoxValue>0</BoxValue>
-              </SideBox>
-              <SideBox>
-                <BoxTM>P3</BoxTM>
-                <BoxValue>0</BoxValue>
-              </SideBox>
+              {players.map((player, index) => (
+                <SideBox
+                  key={index}
+                  sx={{
+                    position: "relative",
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: -13,
+                      left: 38,
+                      width: 0,
+                      height: 0,
+                      borderLeft: "10px solid transparent",
+                      borderRight: "10px solid transparent",
+                      borderBottom: `15px solid ${
+                        index === currentPlayerIndex ? "#FDA214" : "#DFE7EC"
+                      }`,
+                    },
+                    transition: "all 0.3s",
+                    backgroundColor:
+                      index === currentPlayerIndex ? "#FDA214" : "#DFE7EC",
+                  }}
+                >
+                  <BoxTM
+                    sx={{
+                      color:
+                        index === currentPlayerIndex ? "#FCFCFC" : "#7191A5",
+                    }}
+                  >
+                    P{index + 1}
+                  </BoxTM>
+                  <BoxValue
+                    sx={{
+                      color:
+                        index === currentPlayerIndex ? "#FCFCFC" : "#304859",
+                    }}
+                  >
+                    {player.score}
+                  </BoxValue>
+                </SideBox>
+              ))}
             </>
           )}
           {selectedPlayers === "4" && (
             <>
-              <SideBox>
-                <BoxTM>P1</BoxTM>
-                <BoxValue>0</BoxValue>
-              </SideBox>
-              <SideBox>
-                <BoxTM>P2</BoxTM>
-                <BoxValue>0</BoxValue>
-              </SideBox>
-              <SideBox>
-                <BoxTM>P3</BoxTM>
-                <BoxValue>0</BoxValue>
-              </SideBox>
-              <SideBox>
-                <BoxTM>P4</BoxTM>
-                <BoxValue>0</BoxValue>
-              </SideBox>
+              {players.map((player, index) => (
+                <SideBox
+                  key={index}
+                  sx={{
+                    position: "relative",
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: -13,
+                      left: 22,
+                      width: 0,
+                      height: 0,
+                      borderLeft: "10px solid transparent",
+                      borderRight: "10px solid transparent",
+                      borderBottom: `15px solid ${
+                        index === currentPlayerIndex ? "#FDA214" : "#DFE7EC"
+                      }`,
+                    },
+                    transition: "all 0.3s",
+                    backgroundColor:
+                      index === currentPlayerIndex ? "#FDA214" : "#DFE7EC",
+                  }}
+                >
+                  <BoxTM
+                    sx={{
+                      color:
+                        index === currentPlayerIndex ? "#FCFCFC" : "#7191A5",
+                    }}
+                  >
+                    P{index + 1}
+                  </BoxTM>
+                  <BoxValue
+                    sx={{
+                      color:
+                        index === currentPlayerIndex ? "#FCFCFC" : "#304859",
+                    }}
+                  >
+                    {player.score}
+                  </BoxValue>
+                </SideBox>
+              ))}
             </>
           )}
         </Footer>

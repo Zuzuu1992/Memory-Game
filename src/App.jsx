@@ -60,6 +60,19 @@ function App() {
   const [disabled, setDisabled] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [stop, setStop] = useState(false);
+  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
+
+  const [players, setPlayers] = useState([]);
+
+  useEffect(() => {
+    const updatedPlayers = [];
+    for (let i = 0; i < parseInt(selectedPlayers); i++) {
+      updatedPlayers.push({ name: `Player ${i + 1}`, score: 0 });
+    }
+    setPlayers(updatedPlayers);
+  }, [selectedPlayers]);
+
+  // console.log(players);
 
   // console.log("selectedTheme:", selectedTheme);
   // console.log("selectedGridSize:", selectedGridSize);
@@ -121,6 +134,7 @@ function App() {
     }
   }, [circles]);
 
+  let isMatched;
   useEffect(() => {
     if (choiceOne && choiceTwo) {
       setDisabled(true);
@@ -132,7 +146,7 @@ function App() {
       //   console.log(gameOver);
       // }
 
-      const isMatched =
+      isMatched =
         selectedTheme === "Numbers"
           ? choiceOne.position === choiceTwo.position
           : choiceOne.src === choiceTwo.src;
@@ -173,11 +187,20 @@ function App() {
   // console.log(circles);
 
   // reset choices and increase turn
+  let currentPlayer;
   const resetTurn = () => {
     setChoiceOne(null);
     setChoiceTwo(null);
     setTurns((prevTurns) => prevTurns + 1);
     setDisabled(false);
+
+    currentPlayer = players[currentPlayerIndex];
+    const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    if (isMatched) {
+      currentPlayer.score += 1;
+    }
+    setCurrentPlayerIndex(nextPlayerIndex);
+    console.log(currentPlayer);
   };
 
   //start a new game automatically
@@ -228,6 +251,10 @@ function App() {
                 setGameOver={setGameOver}
                 stop={stop}
                 setStop={setStop}
+                currentPlayerIndex={currentPlayerIndex}
+                setCurrentPlayerIndex={setCurrentPlayerIndex}
+                players={players}
+                currentPlayer={currentPlayer}
               />
             }
           />
