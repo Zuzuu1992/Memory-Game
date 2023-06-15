@@ -24,10 +24,16 @@ const Timer = ({ time, setTime, stop, setStop, formatTime }) => {
 
 export default Timer;
 
-const TimerTypo = styled(MuiTypography)(`
- font-weight: 700;
- font-size: 24px;
- line-height: 30px;
- text-align: center;
- color: #304859;
-`);
+const TimerTypo = styled(MuiTypography)`
+  font-family: "Atkinson Hyperlegible";
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  text-align: center;
+  color: #304859;
+
+  @media (min-width: 768px) {
+    font-size: 32px;
+    line-height: 40px;
+  }
+`;

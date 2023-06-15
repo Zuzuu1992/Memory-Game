@@ -40,10 +40,14 @@ function SingleCircleNumber({
               ? "#FDA214"
               : "#304859",
             borderRadius: "50%",
+            "@media (min-width: 768px)": {
+              width: selectedGridSize === "6x6" ? "82px" : "118px",
+              height: selectedGridSize === "6x6" ? "82px" : "118px",
+            },
           }}
         >
           <Typography
-            style={{
+            sx={{
               alignSelf: "center",
               color: "#FCFCFC",
               fontWeight: "700",
@@ -52,6 +56,10 @@ function SingleCircleNumber({
               transform: !isFlipped ? "rotateY(90deg)" : "rotateY(0deg)",
               transition: "all ease-in 0.2s",
               transitionDelay: "0.2s",
+              "@media (min-width: 768px)": {
+                fontSize: selectedGridSize === "6x6" ? "44px" : "56px",
+                lineHeight: selectedGridSize === "6x6" ? "55px" : "69px",
+              },
             }}
           >
             {circle.value}

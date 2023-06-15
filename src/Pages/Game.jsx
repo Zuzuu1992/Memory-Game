@@ -47,6 +47,7 @@ export const Game = ({
   // console.log(currentPlayerIndex);
 
   const [show, setShow] = useState(false);
+
   const menuRef = useRef(null);
 
   const handleMenuClick = () => {
@@ -124,11 +125,46 @@ export const Game = ({
     return winners;
   };
 
+  const [content, setContent] = useState("P");
+  useEffect(() => {
+    const handleContentChange = () => {
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        setContent("Player ");
+      } else {
+        setContent("P");
+      }
+    };
+
+    handleContentChange(); // Initial content setup
+
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    mediaQuery.addEventListener("change", handleContentChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleContentChange);
+    };
+  }, []);
+
   return (
     <>
       <WrapperBox className={show || gameOver ? "show" : ""}>
         <Header>
-          <img src={Logo2} style={{ width: "92px" }} />
+          <Box
+            sx={{
+              width: "92px",
+              "@media (min-width: 768px)": {
+                width: "153px",
+              },
+            }}
+          >
+            <img
+              src={Logo2}
+              style={{
+                width: "100%",
+              }}
+              alt="Logo"
+            />
+          </Box>
           <Box sx={{ position: "relative" }}>
             <MenuButton
               onClick={handleMenuClick}
@@ -136,133 +172,180 @@ export const Game = ({
             >
               Menu
             </MenuButton>
-            {show && (
-              <div ref={menuRef}>
-                <MenuBox>
-                  <ResetButton
-                    onClick={handleRestart}
-                    sx={{
-                      backgroundColor: "#FDA214",
-                      color: "#FCFCFC",
-                    }}
-                  >
-                    Restart
-                  </ResetButton>
-                  <ResetButton onClick={handleNewGame}>New Game</ResetButton>
-                  <ResetButton onClick={handleResumeGame}>
-                    Resume Game
-                  </ResetButton>
-                </MenuBox>
-              </div>
-            )}
-            {gameOver && (
-              <div ref={menuRef} style={{ position: "relative" }}>
-                <OverBox>
-                  {selectedPlayers === "1" ? (
-                    <>
-                      <H1>You did it!</H1>
-                      <H2>Game over! Here's how you got on...</H2>
+            <TabletBox>
+              <ResetButton
+                onClick={handleRestart}
+                sx={{
+                  backgroundColor: "#FDA214",
+                  color: "#FCFCFC",
+                }}
+              >
+                Restart
+              </ResetButton>
+              <ResetButton onClick={handleNewGame}>New Game</ResetButton>
+            </TabletBox>
+          </Box>
+        </Header>
+        {show && (
+          <div ref={menuRef} style={{ position: "relative" }}>
+            <MenuBox>
+              <ResetButton
+                onClick={handleRestart}
+                sx={{
+                  backgroundColor: "#FDA214",
+                  color: "#FCFCFC",
+                }}
+              >
+                Restart
+              </ResetButton>
+              <ResetButton onClick={handleNewGame}>New Game</ResetButton>
+              <ResetButton onClick={handleResumeGame}>Resume Game</ResetButton>
+            </MenuBox>
+          </div>
+        )}
+        {gameOver && (
+          <div ref={menuRef}>
+            <OverBox
+              sx={{
+                top: selectedPlayers !== "1" ? "8%" : "15%",
+                "@media (min-width: 768px)": {
+                  top: selectedPlayers !== "1" ? "14%" : "25%",
+                },
+                "@media (min-width: 1440px)": {
+                  top: selectedPlayers !== "1" ? "18%" : "30%",
+                },
+              }}
+            >
+              {selectedPlayers === "1" ? (
+                <>
+                  <H1>You did it!</H1>
+                  <H2>Game over! Here's how you got on...</H2>
 
-                      <Box
-                        sx={{
-                          width: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          rowGap: "8px",
-                          marginBottom: "16px",
-                        }}
-                      >
-                        <Results>
-                          <Title>Time Elapsed</Title>
-                          <Total>{formatTime(time)}</Total>
-                        </Results>
-                        <Results>
-                          <Title>see</Title>
-                          <Total>{turns} Moves</Total>
-                        </Results>
-                      </Box>
-                    </>
-                  ) : (
-                    <>
-                      {getWinners().length > 1 ? (
-                        <H1>It's a tie!</H1>
-                      ) : (
-                        <H1>Player {getWinners()[0] + 1} Wins!</H1>
-                      )}
-                      <H2>Game over! Here are the results...</H2>
-
-                      <Box
-                        sx={{
-                          width: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          rowGap: "8px",
-                          marginBottom: "16px",
-                        }}
-                      >
-                        {players.map((player, index) => (
-                          <Results
-                            key={index}
-                            sx={{
-                              backgroundColor: getWinners().includes(index)
-                                ? "#152938"
-                                : "#DFE7EC",
-                              order: getWinners().includes(index) ? -1 : 0,
-                            }}
-                          >
-                            <Title
-                              sx={{
-                                color: getWinners().includes(index)
-                                  ? "#FCFCFC"
-                                  : "#7191A5",
-                              }}
-                            >
-                              {getWinners().includes(index) ? (
-                                <span>Player {index + 1} (Winner)</span>
-                              ) : (
-                                <span>Player {index + 1}</span>
-                              )}
-                            </Title>
-                            <Total
-                              sx={{
-                                color: getWinners().includes(index)
-                                  ? "#FCFCFC"
-                                  : "#304859",
-                              }}
-                            >
-                              {player.score} Pairs
-                            </Total>
-                          </Results>
-                        ))}
-                      </Box>
-                    </>
-                  )}
                   <Box
                     sx={{
                       width: "100%",
                       display: "flex",
                       flexDirection: "column",
-                      rowGap: "16px",
+                      rowGap: "8px",
+                      marginBottom: "16px",
                     }}
                   >
-                    <ResetButton
-                      onClick={handleRestart}
-                      sx={{
-                        backgroundColor: buttonClicked ? "#FDA214" : "#DFE7EC",
-                        color: buttonClicked ? "#FCFCFC" : "#304859",
-                      }}
-                    >
-                      Restart
-                    </ResetButton>
-                    <ResetButton onClick={handleNewGame}>
-                      Setup New Game
-                    </ResetButton>
+                    <Results>
+                      <Title>Time Elapsed</Title>
+                      <Total>{formatTime(time)}</Total>
+                    </Results>
+                    <Results>
+                      <Title>Moves Taken</Title>
+                      <Total>{turns} Moves</Total>
+                    </Results>
                   </Box>
-                </OverBox>
-              </div>
-            )}
-          </Box>
-        </Header>
+                </>
+              ) : (
+                <>
+                  {getWinners().length > 1 ? (
+                    <H1>It's a tie!</H1>
+                  ) : (
+                    <H1>Player {getWinners()[0] + 1} Wins!</H1>
+                  )}
+                  <H2>Game over! Here are the results...</H2>
+
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      rowGap: "8px",
+                      marginBottom: "16px",
+                      "@media (min-width: 768px)": {
+                        rowGap: "16px",
+                      },
+                    }}
+                  >
+                    {players.map((player, index) => (
+                      <Results
+                        key={index}
+                        sx={{
+                          backgroundColor: getWinners().includes(index)
+                            ? "#152938"
+                            : "#DFE7EC",
+                          order: getWinners().includes(index) ? -1 : 0,
+                        }}
+                      >
+                        <Title
+                          sx={{
+                            color: getWinners().includes(index)
+                              ? "#FCFCFC"
+                              : "#7191A5",
+                          }}
+                        >
+                          {getWinners().includes(index) ? (
+                            <span>Player {index + 1} (Winner)</span>
+                          ) : (
+                            <span>Player {index + 1}</span>
+                          )}
+                        </Title>
+                        <Total
+                          sx={{
+                            color: getWinners().includes(index)
+                              ? "#FCFCFC"
+                              : "#304859",
+                          }}
+                        >
+                          {player.score} Pairs
+                        </Total>
+                      </Results>
+                    ))}
+                  </Box>
+                </>
+              )}
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  rowGap: "16px",
+                  "@media (min-width: 768px)": {
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    columnGap: "14px",
+                    marginTop: "12px",
+                  },
+                }}
+              >
+                <ResetButton
+                  onClick={handleRestart}
+                  sx={{
+                    // backgroundColor: buttonClicked ? "#FDA214" : "#DFE7EC",
+                    // color: buttonClicked ? "#FCFCFC" : "#304859",
+                    "@media (min-width: 768px)": {
+                      width: "100%",
+                      fontSize: "24px",
+                      lineHeight: "29px",
+                      backgroundColor: "#FDA214",
+                      color: "#FCFCFC",
+                      padding: "14px 0",
+                    },
+                  }}
+                >
+                  Restart
+                </ResetButton>
+                <ResetButton
+                  onClick={handleNewGame}
+                  sx={{
+                    "@media (min-width: 768px)": {
+                      width: "100%",
+                      fontSize: "24px",
+                      lineHeight: "29px",
+                    },
+                  }}
+                >
+                  Setup New Game
+                </ResetButton>
+              </Box>
+            </OverBox>
+          </div>
+        )}
         {selectedTheme === "Icons" && selectedGridSize === "6x6" && (
           <GridBox>
             {circles.map((circle) => (
@@ -346,8 +429,29 @@ export const Game = ({
         <Footer>
           {selectedPlayers === "1" && (
             <>
-              <SideBox>
-                <BoxTM>Time</BoxTM>
+              <SideBox
+                sx={{
+                  "@media (min-width: 768px)": {
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "25px",
+                  },
+                  "@media (min-width: 1440px)": {
+                    marginLeft: "265px",
+                  },
+                }}
+              >
+                <BoxTM
+                  sx={{
+                    "@media (min-width: 768px)": {
+                      fontSize: "18px",
+                      lineHeight: "22px",
+                    },
+                  }}
+                >
+                  Time
+                </BoxTM>
                 <Timer
                   formatTime={formatTime}
                   time={time}
@@ -356,9 +460,39 @@ export const Game = ({
                   setStop={setStop}
                 ></Timer>
               </SideBox>
-              <SideBox>
-                <BoxTM>Moves</BoxTM>
-                <BoxValue>{turns}</BoxValue>
+              <SideBox
+                sx={{
+                  "@media (min-width: 768px)": {
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "25px",
+                  },
+                  "@media (min-width: 1440px)": {
+                    marginRight: "265px",
+                  },
+                }}
+              >
+                <BoxTM
+                  sx={{
+                    "@media (min-width: 768px)": {
+                      fontSize: "18px",
+                      lineHeight: "22px",
+                    },
+                  }}
+                >
+                  Moves
+                </BoxTM>
+                <BoxValue
+                  sx={{
+                    "@media (min-width: 768px)": {
+                      fontSize: "32px",
+                      lineHeight: "40px",
+                    },
+                  }}
+                >
+                  {turns}
+                </BoxValue>
               </SideBox>
             </>
           )}
@@ -373,11 +507,13 @@ export const Game = ({
                       content: '""',
                       position: "absolute",
                       top: -13,
-                      left: 65,
+                      left: "50%",
                       width: 0,
                       height: 0,
                       borderLeft: "10px solid transparent",
                       borderRight: "10px solid transparent",
+                      visibility:
+                        index === currentPlayerIndex ? "visible" : "hidden",
                       borderBottom: `15px solid ${
                         index === currentPlayerIndex ? "#FDA214" : "#DFE7EC"
                       }`,
@@ -385,6 +521,27 @@ export const Game = ({
                     transition: "all 0.3s",
                     backgroundColor:
                       index === currentPlayerIndex ? "#FDA214" : "#DFE7EC",
+
+                    "@media (min-width: 1440px)": {
+                      "&::after": {
+                        content:
+                          index === currentPlayerIndex
+                            ? '"Current Turn"'
+                            : `""`,
+                        position: "absolute",
+                        top: "110%",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        marginTop: "5px",
+                        fontSize: "12px",
+                        color: "#152938",
+                        fontFamily: "Atkinson Hyperlegible",
+                        fontWeight: "700",
+                        fontSize: "13px",
+                        lineHeight: "16px",
+                        letterSpacing: "4px",
+                      },
+                    },
                   }}
                 >
                   <BoxTM
@@ -393,7 +550,8 @@ export const Game = ({
                         index === currentPlayerIndex ? "#FCFCFC" : "#7191A5",
                     }}
                   >
-                    P{index + 1}
+                    {content}
+                    {index + 1}
                   </BoxTM>
                   <BoxValue
                     sx={{
@@ -418,11 +576,13 @@ export const Game = ({
                       content: '""',
                       position: "absolute",
                       top: -13,
-                      left: 38,
+                      left: "50%",
                       width: 0,
                       height: 0,
                       borderLeft: "10px solid transparent",
                       borderRight: "10px solid transparent",
+                      visibility:
+                        index === currentPlayerIndex ? "visible" : "hidden",
                       borderBottom: `15px solid ${
                         index === currentPlayerIndex ? "#FDA214" : "#DFE7EC"
                       }`,
@@ -430,6 +590,27 @@ export const Game = ({
                     transition: "all 0.3s",
                     backgroundColor:
                       index === currentPlayerIndex ? "#FDA214" : "#DFE7EC",
+
+                    "@media (min-width: 1440px)": {
+                      "&::after": {
+                        content:
+                          index === currentPlayerIndex
+                            ? '"Current Turn"'
+                            : `""`,
+                        position: "absolute",
+                        top: "110%",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        marginTop: "5px",
+                        fontSize: "12px",
+                        color: "#152938",
+                        fontFamily: "Atkinson Hyperlegible",
+                        fontWeight: "700",
+                        fontSize: "13px",
+                        lineHeight: "16px",
+                        letterSpacing: "4px",
+                      },
+                    },
                   }}
                 >
                   <BoxTM
@@ -438,7 +619,8 @@ export const Game = ({
                         index === currentPlayerIndex ? "#FCFCFC" : "#7191A5",
                     }}
                   >
-                    P{index + 1}
+                    {content}
+                    {index + 1}
                   </BoxTM>
                   <BoxValue
                     sx={{
@@ -463,18 +645,42 @@ export const Game = ({
                       content: '""',
                       position: "absolute",
                       top: -13,
-                      left: 22,
+                      left: "50%",
                       width: 0,
                       height: 0,
                       borderLeft: "10px solid transparent",
                       borderRight: "10px solid transparent",
+                      visibility:
+                        index === currentPlayerIndex ? "visible" : "hidden",
                       borderBottom: `15px solid ${
                         index === currentPlayerIndex ? "#FDA214" : "#DFE7EC"
                       }`,
                     },
                     transition: "all 0.3s",
+
                     backgroundColor:
                       index === currentPlayerIndex ? "#FDA214" : "#DFE7EC",
+
+                    "@media (min-width: 1440px)": {
+                      "&::after": {
+                        content:
+                          index === currentPlayerIndex
+                            ? '"Current Turn"'
+                            : `""`,
+                        position: "absolute",
+                        top: "110%",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        marginTop: "5px",
+                        fontSize: "12px",
+                        color: "#152938",
+                        fontFamily: "Atkinson Hyperlegible",
+                        fontWeight: "700",
+                        fontSize: "13px",
+                        lineHeight: "16px",
+                        letterSpacing: "4px",
+                      },
+                    },
                   }}
                 >
                   <BoxTM
@@ -483,7 +689,8 @@ export const Game = ({
                         index === currentPlayerIndex ? "#FCFCFC" : "#7191A5",
                     }}
                   >
-                    P{index + 1}
+                    {content}
+                    {index + 1}
                   </BoxTM>
                   <BoxValue
                     sx={{
@@ -532,6 +739,17 @@ const WrapperBox = styled(MuiBox)(
     display: block;
     pointer-events: auto;
   }
+  @media (min-width: 768px) {
+    padding:38px;
+    row-gap:130px;
+  }
+  @media (min-width: 1440px) {
+    padding-top:85px;
+    padding-left:167px;
+    padding-bottom:74px;
+    padding-right:167px;
+   
+  }
 `
 );
 
@@ -552,13 +770,16 @@ text-transform:none;
     background-color: #fda214;
     outline: none;
   }
+  @media (min-width: 768px) {
+    display:none;
+  }
 `);
 
 const MenuBox = styled(MuiBox)(`
   position:absolute;
-  top:235px;
-  right:0;
-  width:327px;
+  top:32%;
+  right:5;
+  width:100%;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -572,9 +793,9 @@ const MenuBox = styled(MuiBox)(`
 
 const OverBox = styled(MuiBox)(`
   position:absolute;
-  top:80px;
-  right:0;
-  width:327px;
+  top:"22%";
+  right:5%;
+  width:90%;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -584,6 +805,17 @@ const OverBox = styled(MuiBox)(`
   padding:24px;
   border-radius:10px;
   z-index:2;
+  @media (min-width: 768px) {
+    right:10%;
+    width:80%;
+    padding:51px 56px 69px 56px;
+    /* top: 73px; */
+    row-gap:40px;
+  }
+  @media (min-width: 1440px) {
+    width:50%;
+   right:25%;
+  }
 `);
 
 const ResetButton = styled(MuiButton)(`
@@ -604,6 +836,27 @@ const ResetButton = styled(MuiButton)(`
     background-color: #FDA214;
     color:#FCFCFC;
   }
+  @media (min-width: 768px) {
+    font-size: 20px;
+line-height: 25px;
+padding-left:24px;
+  padding-right:24px;
+  width:auto;
+ 
+  }
+`);
+
+const TabletBox = styled(MuiBox)(`
+display:none;
+  
+@media (min-width: 768px) {
+  display:block;
+  display:flex;
+ align-items:center;
+ justify-content:center;
+ column-gap:16px;
+  }
+
 `);
 
 const GridBox = styled(MuiBox)(`
@@ -612,6 +865,18 @@ const GridBox = styled(MuiBox)(`
   grid-template-columns: repeat(6, 1fr);
   column-gap: 9.12px;
   row-gap: 9.12px;
+  justify-items:center;
+  align-items:center;
+ 
+  @media (min-width: 768px) {
+    row-gap: 20px;
+    column-gap: 20px;
+    padding: 0 51px;
+  }
+  @media (min-width: 1440px) {
+    padding: 0 256px;
+  }
+
 `);
 
 const Header = styled(MuiBox)(`
@@ -627,6 +892,9 @@ const Footer = styled(MuiBox)(`
   align-items:center;
   justify-content:space-between;
   column-gap:25px;
+  @media (min-width: 1440px) {
+  margin-top:25px;
+  }
 `);
 
 const SideBox = styled(MuiBox)(`
@@ -640,6 +908,23 @@ const SideBox = styled(MuiBox)(`
  justify-content:center;
  row-gap:2px;
  width:100%;
+ @media (min-width: 768px) {
+  align-items:flex-start;
+  padding-left:16px;
+  row-gap:5px;
+  padding-top:14px;
+  padding-bottom:14px;
+  }
+  @media (min-width: 1440px) {
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-between;
+  padding-left:21px;
+  padding-right:21px;
+  padding-top:25px;
+  padding-bottom:25px;
+  }
+
 `);
 
 const BoxTM = styled(MuiTypography)(`
@@ -667,6 +952,10 @@ const H1 = styled(MuiTypography)(`
  line-height: 30px;
  text-align: center;
  color: #152938;
+ @media (min-width: 768px) {
+  font-size: 48px;
+line-height: 60px;
+  }
 `);
 
 const H2 = styled(MuiTypography)(`
@@ -678,6 +967,12 @@ const H2 = styled(MuiTypography)(`
  color: #7191A5;
  margin-top:-11px;
  margin-bottom:12px;
+ @media (min-width: 768px) {
+  font-size: 18px;
+line-height: 22px;
+margin-top:-31px;
+ margin-bottom:2px;
+  }
 `);
 
 const Results = styled(MuiBox)(`
@@ -688,6 +983,9 @@ const Results = styled(MuiBox)(`
  justify-content:space-between;
  padding:16px;
  width:100%;
+ @media (min-width: 768px) {
+  padding:25px 32px;
+  }
 `);
 
 const Title = styled(MuiTypography)(`
@@ -697,7 +995,10 @@ const Title = styled(MuiTypography)(`
  font-size: 13px;
  line-height: 16px;
  color: #7191A5;
-
+ @media (min-width: 768px) {
+  font-size: 18px;
+line-height: 22px;
+  }
 `);
 
 const Total = styled(MuiTypography)(`
@@ -707,5 +1008,8 @@ font-weight: 700;
 font-size: 20px;
 line-height: 25px;
 color: #304859;
-
+@media (min-width: 768px) {
+  font-size: 32px;
+line-height: 40px;
+  }
 `);

@@ -36,8 +36,20 @@ function StartGame({
   };
   return (
     <CustomBox>
-      <Box>
-        <img src={Logo} />
+      <Box
+        sx={{
+          "@media (min-width: 768px)": {
+            width: "170px",
+          },
+        }}
+      >
+        <img
+          src={Logo}
+          style={{
+            width: "100%",
+          }}
+          alt="Logo"
+        />
       </Box>
 
       <Box
@@ -50,6 +62,11 @@ function StartGame({
           borderRadius: "10px",
           overflow: "hidden",
           padding: "24px",
+          "@media (min-width: 768px)": {
+            padding: "56px",
+            marginBottom: "-55px",
+            rowGap: "32px",
+          },
         }}
       >
         <Section>
@@ -82,7 +99,14 @@ function StartGame({
 
         <Section>
           <Instructon>Numbers of Players</Instructon>
-          <Section2 sx={{ justifyContent: "space-between" }}>
+          <Section2
+            sx={{
+              justifyContent: "space-between",
+              "@media (min-width: 768px)": {
+                columnGap: "21px",
+              },
+            }}
+          >
             <ChoiceButton
               onClick={() => handlePlayersChange("1")}
               sx={{
@@ -185,7 +209,22 @@ const CustomBox = styled(MuiBox)(`
   padding-left:24px;
   padding-top:80px;
   padding-bottom:116px;
-  height:100vh;
+  min-height:100vh;
+  
+  @media (min-width: 768px) {
+  padding-right:57px;
+  padding-left:57px;
+  padding-top:140px;
+  padding-bottom:168px;
+  row-gap:68px;
+  }
+  @media (min-width: 1440px) {
+  padding-right:393px;
+  padding-left:393px;
+  padding-top:154px;
+  padding-bottom:183px;
+  row-gap:78px;
+  }
 `);
 
 const Instructon = styled(MuiTypography)(`
@@ -193,6 +232,10 @@ const Instructon = styled(MuiTypography)(`
   font-size: 15px;
   line-height: 19px;
   color: #7191A5;
+  @media (min-width: 768px) {
+  font-size: 20px;
+  line-height: 25px;
+  }
 
 `);
 
@@ -216,6 +259,11 @@ const ChoiceButton = styled(MuiButton)(`
   &:hover {
     background-color: #6395B8;
   }
+
+  @media (min-width: 768px) {
+    font-size: 26px;
+line-height: 32px;
+  }
 `);
 
 const Section = styled(MuiStack)(`
@@ -223,6 +271,9 @@ const Section = styled(MuiStack)(`
   justify-content: flex-start;
   align-items: stretch;
   row-gap: 11px;
+  @media (min-width: 768px) {
+    row-gap: 16px;
+  }
 `);
 
 const Section2 = styled(MuiStack)(`
@@ -231,6 +282,9 @@ const Section2 = styled(MuiStack)(`
   justify-content: space-between;
   column-gap: 10px;
   max-width:100%;
+  @media (min-width: 768px) {
+    column-gap: 30px;
+  }
 `);
 
 const StartButton = styled(MuiButton)(`
@@ -250,5 +304,10 @@ const StartButton = styled(MuiButton)(`
   transition: all 0.3s;
   &:hover {
     background-color: #FFB84A;
+  }
+  @media (min-width: 768px) {
+    font-size: 32px;
+line-height: 40px;
+margin-top:10px;
   }
 `);
