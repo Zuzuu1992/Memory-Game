@@ -40,6 +40,11 @@ function SingleCircleNumber({
               ? "#FDA214"
               : "#304859",
             borderRadius: "50%",
+            cursor: "pointer",
+            ":hover": {
+              backgroundColor: !isFlipped && !circle.matched ? "#6395B8" : null,
+              boxShadow: "0 0 10px rgba(12, 44, 67, 0.221)",
+            },
             "@media (min-width: 768px)": {
               width: selectedGridSize === "6x6" ? "82px" : "118px",
               height: selectedGridSize === "6x6" ? "82px" : "118px",

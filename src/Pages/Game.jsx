@@ -176,13 +176,32 @@ export const Game = ({
               <ResetButton
                 onClick={handleRestart}
                 sx={{
+                  transition: "all 0.3s",
                   backgroundColor: "#FDA214",
                   color: "#FCFCFC",
+                  ":hover": {
+                    backgroundColor: "#FFB84A",
+                    transform: "scale(1.1)",
+                    boxShadow: "0 0 10px rgba(52, 34, 6, 0.281)",
+                  },
                 }}
               >
                 Restart
               </ResetButton>
-              <ResetButton onClick={handleNewGame}>New Game</ResetButton>
+              <ResetButton
+                onClick={handleNewGame}
+                sx={{
+                  transition: "all 0.3s",
+                  ":hover": {
+                    backgroundColor: "#6395B8",
+                    color: "#FCFCFC",
+                    transform: "scale(1.1)",
+                    boxShadow: "0 0 10px rgba(6, 29, 46, 0.279)",
+                  },
+                }}
+              >
+                New Game
+              </ResetButton>
             </TabletBox>
           </Box>
         </Header>
@@ -766,6 +785,7 @@ line-height: 20px;
 color: #FCFCFC;
 border-radius:26px;
 text-transform:none;
+cursor:pointer;
 &:focus {
     background-color: #fda214;
     outline: none;
@@ -830,6 +850,7 @@ const ResetButton = styled(MuiButton)(`
   width:100%;
   padding-top:12px;
   padding-bottom:14px;
+  cursor:pointer;
   transition:all 0.3s;
  
   &:hover {
