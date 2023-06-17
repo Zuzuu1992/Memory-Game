@@ -1,7 +1,6 @@
 import { Box, Typography as MuiTypography } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useEffect } from "react";
-import { useState } from "react";
 
 const Timer = ({ time, setTime, stop, setStop, formatTime }) => {
   useEffect(() => {

@@ -1,11 +1,9 @@
 import { styled } from "@mui/system";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Box as MuiBox,
   Box,
-  Button,
   Button as MuiButton,
-  Stack,
   Stack as MuiStack,
   Typography as MuiTypography,
 } from "@mui/material";
@@ -19,8 +17,6 @@ function StartGame({
   setSelectedPlayers,
   selectedGridSize,
   setSelectedGridSize,
-  circles,
-  turns,
   shuffleCircles,
 }) {
   const handleThemeChange = (theme) => {
@@ -261,7 +257,7 @@ const ChoiceButton = styled(MuiButton)(`
   }
 
   @media (min-width: 768px) {
-    font-size: 26px;
+font-size: 26px;
 line-height: 32px;
   }
 `);

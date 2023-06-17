@@ -1,14 +1,10 @@
 import { styled } from "@mui/system";
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   Box,
   Box as MuiBox,
-  Button,
   Button as MuiButton,
-  Stack,
   Typography as MuiTypography,
-  Typography,
 } from "@mui/material";
 import SingleCircleIcon from "../components/SingleCircleIcon";
 import SingleCircleNumber from "../components/SingleCircleNumber";
@@ -35,17 +31,7 @@ export const Game = ({
   setCurrentPlayerIndex,
   players,
   setPlayers,
-  currentPlayer,
 }) => {
-  // console.log(selectedTheme);
-  // console.log(selectedGridSize);
-  // console.log(selectedPlayers);
-
-  // console.log(gameOver);
-  // console.log(players);
-  // console.log(currentPlayer);
-  // console.log(currentPlayerIndex);
-
   const [show, setShow] = useState(false);
 
   const menuRef = useRef(null);
@@ -135,7 +121,7 @@ export const Game = ({
       }
     };
 
-    handleContentChange(); // Initial content setup
+    handleContentChange();
 
     const mediaQuery = window.matchMedia("(max-width: 767px)");
     mediaQuery.addEventListener("change", handleContentChange);
@@ -335,8 +321,6 @@ export const Game = ({
                 <ResetButton
                   onClick={handleRestart}
                   sx={{
-                    // backgroundColor: buttonClicked ? "#FDA214" : "#DFE7EC",
-                    // color: buttonClicked ? "#FCFCFC" : "#304859",
                     "@media (min-width: 768px)": {
                       width: "100%",
                       fontSize: "24px",
@@ -829,7 +813,6 @@ const OverBox = styled(MuiBox)(`
     right:10%;
     width:80%;
     padding:51px 56px 69px 56px;
-    /* top: 73px; */
     row-gap:40px;
   }
   @media (min-width: 1440px) {

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import { styled, createTheme, ThemeProvider } from "@mui/system";
 import { Box, Container as MuiContainer } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -61,7 +60,6 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [stop, setStop] = useState(false);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
@@ -72,14 +70,6 @@ function App() {
     setPlayers(updatedPlayers);
   }, [selectedPlayers]);
 
-  // console.log(players);
-
-  // console.log("selectedTheme:", selectedTheme);
-  // console.log("selectedGridSize:", selectedGridSize);
-  // console.log("selectedPlayers:", selectedPlayers);
-  // console.log(choiceOne, choiceTwo);
-
-  //shuffle circles
   const shuffleCircles = () => {
     const shuffledCircles =
       selectedTheme === "Numbers" && selectedGridSize === "6x6"
@@ -105,9 +95,6 @@ function App() {
     setCircles(shuffledCircles);
     setTurns(0);
   };
-
-  // console.log(circles);
-  // console.log(turns);
 
   const handleChoice = (circle) => {
     if (choiceOne && choiceTwo) {
@@ -138,13 +125,6 @@ function App() {
   useEffect(() => {
     if (choiceOne && choiceTwo) {
       setDisabled(true);
-      // console.log(disabled);
-
-      // const allMatched = circles.every((circle) => circle.matched);
-      // if (allMatched && circles.length > 0) {
-      //   setGameOver(true);
-      //   console.log(gameOver);
-      // }
 
       isMatched =
         selectedTheme === "Numbers"
@@ -184,9 +164,6 @@ function App() {
     }
   }, [choiceOne, choiceTwo, selectedTheme, gameOver]);
 
-  // console.log(circles);
-
-  // reset choices and increase turn
   let currentPlayer;
   const resetTurn = () => {
     setChoiceOne(null);
@@ -203,7 +180,6 @@ function App() {
     console.log(currentPlayer);
   };
 
-  //start a new game automatically
   useEffect(() => {
     shuffleCircles();
   }, []);
@@ -222,8 +198,6 @@ function App() {
                 setSelectedPlayers={setSelectedPlayers}
                 selectedGridSize={selectedGridSize}
                 setSelectedGridSize={setSelectedGridSize}
-                circle={circles}
-                turns={turns}
                 shuffleCircles={shuffleCircles}
               />
             }
@@ -255,7 +229,6 @@ function App() {
                 setCurrentPlayerIndex={setCurrentPlayerIndex}
                 players={players}
                 setPlayers={setPlayers}
-                currentPlayer={currentPlayer}
               />
             }
           />

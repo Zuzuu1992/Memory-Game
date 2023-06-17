@@ -5,15 +5,11 @@ function SingleCircleNumber({
   circle,
   handleChoice,
   isFlipped,
-  selectedTheme,
   selectedGridSize,
-  selectedPlayers,
 }) {
   const handleCircleClick = () => {
     handleChoice(circle);
   };
-
-  // console.log(isFlipped);
 
   return (
     <>
